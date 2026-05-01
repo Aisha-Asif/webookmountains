@@ -15,6 +15,10 @@ export default function Navbar({ user }: NavbarProps) {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
+    // Shut down Intercom to clear conversation history
+    if (typeof window !== 'undefined' && (window as any).Intercom) {
+      (window as any).Intercom('shutdown')
+    }
     router.push('/')
     router.refresh()
   }

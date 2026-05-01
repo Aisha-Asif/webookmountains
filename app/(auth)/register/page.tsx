@@ -1,10 +1,11 @@
 'use client'
-import { useState } from 'react'
+
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Mountain, Eye, EyeOff, Users, Compass } from 'lucide-react'
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const defaultRole = searchParams.get('role') || 'customer'
@@ -51,12 +52,14 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-stone-950 flex items-center justify-center px-4 py-12">
+      {/* Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-1/4 w-[600px] h-[400px] bg-alpine-900/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[300px] bg-summit-900/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-sm">
+        {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
             <div className="w-9 h-9 bg-summit-600 rounded-xl flex items-center justify-center">
@@ -88,7 +91,11 @@ export default function RegisterPage() {
                 }`}
               >
                 <Icon size={16} className={role === val ? 'text-summit-400' : 'text-stone-500'} />
-                <p className={`text-sm font-medium mt-2 ${role === val ? 'text-stone-100' : 'text-stone-400'}`}>
+                <p
+                  className={`text-sm font-medium mt-2 ${
+                    role === val ? 'text-stone-100' : 'text-stone-400'
+                  }`}
+                >
                   {label}
                 </p>
                 <p className="text-xs text-stone-600 mt-0.5">{desc}</p>
@@ -96,9 +103,12 @@ export default function RegisterPage() {
             ))}
           </div>
 
+          {/* Form */}
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
-              <label className="block text-xs text-stone-400 mb-1.5 font-medium">Full name</label>
+              <label className="block text-xs text-stone-400 mb-1.5 font-medium">
+                Full name
+              </label>
               <input
                 type="text"
                 className="input-field"
@@ -118,13 +128,17 @@ export default function RegisterPage() {
                 className="input-field"
                 placeholder="hassan_k"
                 value={username}
-                onChange={e => setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))}
+                onChange={e =>
+                  setUsername(e.target.value.replace(/[^a-zA-Z0-9_]/g, ''))
+                }
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs text-stone-400 mb-1.5 font-medium">Password</label>
+              <label className="block text-xs text-stone-400 mb-1.5 font-medium">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPass ? 'text' : 'password'}
@@ -155,14 +169,23 @@ export default function RegisterPage() {
               disabled={loading}
               className="btn btn-primary w-full py-3 mt-2 font-medium"
             >
-              {loading ? <><div className="spinner" /> Creating account...</> : `Create ${role} account`}
+              {loading ? (
+                <>
+                  <div className="spinner" /> Creating account...
+                </>
+              ) : (
+                `Create ${role} account`
+              )}
             </button>
           </form>
 
           <div className="mt-5 pt-5 border-t border-white/5 text-center">
             <p className="text-sm text-stone-500">
               Already have an account?{' '}
-              <Link href="/login" className="text-summit-400 hover:text-summit-300 transition-colors">
+              <Link
+                href="/login"
+                className="text-summit-400 hover:text-summit-300 transition-colors"
+              >
                 Sign in
               </Link>
             </p>
@@ -170,5 +193,13 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-stone-950" />}>
+      <RegisterForm />
+    </Suspense>
   )
 }

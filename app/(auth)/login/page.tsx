@@ -1,10 +1,11 @@
 'use client'
-import { useState } from 'react'
+
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Mountain, Eye, EyeOff } from 'lucide-react'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/'
@@ -74,7 +75,9 @@ export default function LoginPage() {
         <div className="bg-alpine-950/50 border border-white/8 rounded-2xl p-7">
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs text-stone-400 mb-1.5 font-medium">Username</label>
+              <label className="block text-xs text-stone-400 mb-1.5 font-medium">
+                Username
+              </label>
               <input
                 type="text"
                 className="input-field"
@@ -87,7 +90,9 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-stone-400 mb-1.5 font-medium">Password</label>
+              <label className="block text-xs text-stone-400 mb-1.5 font-medium">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPass ? 'text' : 'password'}
@@ -119,14 +124,23 @@ export default function LoginPage() {
               disabled={loading}
               className="btn btn-primary w-full py-3 mt-2 font-medium"
             >
-              {loading ? <><div className="spinner" /> Signing in...</> : 'Sign in'}
+              {loading ? (
+                <>
+                  <div className="spinner" /> Signing in...
+                </>
+              ) : (
+                'Sign in'
+              )}
             </button>
           </form>
 
           <div className="mt-5 pt-5 border-t border-white/5 text-center">
             <p className="text-sm text-stone-500">
               No account?{' '}
-              <Link href="/register" className="text-summit-400 hover:text-summit-300 transition-colors">
+              <Link
+                href="/register"
+                className="text-summit-400 hover:text-summit-300 transition-colors"
+              >
                 Create one free
               </Link>
             </p>
@@ -135,13 +149,31 @@ export default function LoginPage() {
 
         {/* Demo credentials hint */}
         <div className="mt-4 bg-stone-900/40 border border-white/5 rounded-xl p-4">
-          <p className="text-xs text-stone-500 font-medium mb-2">Demo accounts (seed data):</p>
+          <p className="text-xs text-stone-500 font-medium mb-2">
+            Demo accounts (seed data):
+          </p>
           <div className="space-y-1 text-xs text-stone-600 font-mono">
-            <p>customer: <span className="text-stone-400">alex_hiker</span> / pass: <span className="text-stone-400">password123</span></p>
-            <p>guide: <span className="text-stone-400">hassan_guide</span> / pass: <span className="text-stone-400">password123</span></p>
+            <p>
+              customer:{' '}
+              <span className="text-stone-400">alex_hiker</span> / pass:{' '}
+              <span className="text-stone-400">password123</span>
+            </p>
+            <p>
+              guide:{' '}
+              <span className="text-stone-400">hassan_guide</span> / pass:{' '}
+              <span className="text-stone-400">password123</span>
+            </p>
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-stone-950" />}>
+      <LoginForm />
+    </Suspense>
   )
 }

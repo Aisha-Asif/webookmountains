@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Mountain, Menu, X, LogOut, User, LayoutDashboard } from 'lucide-react'
+import { Mountain, Menu, X, LogOut, LayoutDashboard } from 'lucide-react'
 import { useState } from 'react'
 import type { AuthUser } from '@/types'
 
@@ -15,10 +15,13 @@ export default function Navbar({ user }: NavbarProps) {
 
   async function handleLogout() {
     await fetch('/api/auth/logout', { method: 'POST' })
-    // Shut down Intercom to clear conversation history
-    if (typeof window !== 'undefined' && (window as any).Intercom) {
-      (window as any).Intercom('shutdown')
+
+    // Shut down the Intercom widget so the conversation history is
+    // cleared before the layout re-renders without a session.
+    if (typeof window !== 'undefined' && typeof window.Intercom === 'function') {
+      window.Intercom('shutdown')
     }
+
     router.push('/')
     router.refresh()
   }
